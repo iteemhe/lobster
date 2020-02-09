@@ -1,1 +1,1 @@
-from backend.api.index import index
+from backend.api.index import *

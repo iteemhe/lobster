@@ -8,4 +8,6 @@
 /public/lobster/js/
 /node_modules/
 
-/env/
+/env/   
+/backend/__pycache__/
+/backend/api/__pycache__/

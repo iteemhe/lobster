@@ -17,7 +17,7 @@ def verify_login(func):
 @backend.app.route('/logout/')
 def logout():
     flask.session.clear()
-    return redirect('/')
+    return "You have been logged out"
 
 @backend.app.route('/login/')
 def login():
@@ -31,9 +31,9 @@ def authorize():
     profile = resp.json()
     flask.session['credentials'] = token
     flask.session['name'] = profile['name']
-    return redirect('/')
+    return redirect('/api/ping/')
 
-@backend.app.route('/api/ping')
+@backend.app.route('/api/ping/')
 @verify_login
 def ping():
     return "pong"
