@@ -3,6 +3,17 @@ from flask import Flask,url_for, render_template,redirect
 import flask
 import time
 
+def verify_login(func):
+    def wrapper():
+        if 'credentials' not in flask.session:
+            return redirect('/login/')
+        else:
+            if time.time() > flask.session['credentials']['expires_at']:
+                return redirect('/login/')
+        return func()
+    wrapper.__name__ = func.__name__
+    return wrapper
+
 @backend.app.route('/logout/')
 def logout():
     flask.session.clear()
@@ -22,23 +33,7 @@ def authorize():
     flask.session['name'] = profile['name']
     return redirect('/')
 
-@backend.app.route('/')
-def index():
-    if 'credentials' not in flask.session:
-        return redirect('/login/')
-    else:
-        if time.time() > flask.session['credentials']['expires_at']:
-            return redirect('/login/')
-    # profile = resp.json()
-    print(flask.session['credentials'])
-    return flask.session['name']
-
-
 @backend.app.route('/api/ping')
+@verify_login
 def ping():
-    if 'credentials' not in flask.session:
-        return redirect('/login/')
-    else:
-        if time.time() > flask.session['credentials']['expires_at']:
-            return redirect('/login/')
     return "pong"
