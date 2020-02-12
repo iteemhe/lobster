@@ -2,15 +2,36 @@ import backend
 from flask import Flask,url_for, render_template,redirect
 import flask
 import time
+import requests
 
 def verify_login(func):
     def wrapper():
         if 'credentials' not in flask.session:
             return redirect('/login/')
         else:
-            if time.time() > flask.session['credentials']['expires_at']:
+            url = backend.app.config["TOKEN_INFO_URL"] + flask.session['credentials']['id_token']
+            response = requests.get(url)
+            
+            if not response:
                 return redirect('/login/')
-        return func()
+            
+            if response.status_code != 200:
+                return redirect('/login/')
+
+            body = response.json()
+
+            try:
+                if body['aud'] != backend.app.config['GOOGLE_CLIENT_ID']:
+                    return redirect('/login/')
+
+                if int(body['exp']) < int(time.time()):
+                    return redirect('/login/')
+                
+                email = body['email']
+
+            except KeyError:
+                return redirect('/login/')
+        return func(email)
     wrapper.__name__ = func.__name__
     return wrapper
 
@@ -27,13 +48,10 @@ def login():
 @backend.app.route('/authorize/')
 def authorize():
     token = backend.oauth.google.authorize_access_token()
-    resp = backend.oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo')
-    profile = resp.json()
     flask.session['credentials'] = token
-    flask.session['name'] = profile['name']
     return redirect('/api/ping/')
 
 @backend.app.route('/api/ping/')
 @verify_login
-def ping():
-    return "pong"
+def ping(email):
+    return "pong: {}".format(email)
