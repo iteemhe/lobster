@@ -1,0 +1,5 @@
+#!/bin/bash
+sudo service postgresql start
+export FLASK_APP=backend
+export FLASK_DEBUG=True
+flask run --host 0.0.0.0 --port 8000

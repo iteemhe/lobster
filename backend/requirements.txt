@@ -1,2 +1,6 @@
 flask
 Oauth
+psycopg2
+flask_swagger_ui
+authlib
+requests

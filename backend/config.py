@@ -7,6 +7,6 @@ GOOGLE_ACCESS_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token'
 GOOGLE_SCOPE = 'https://www.googleapis.com/auth/plus.login'
 USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
 TOKEN_INFO_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token="
-
+USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo?access_token="
 #Flask Cookie Stuff
 SECRET_KEY = b';\x18\xe8\xcb~\xf4\x19ExZ7\xbb\x9c\x18\xd0\x07\xa9\x89\xb6A\xfa\x19\xbf?'
