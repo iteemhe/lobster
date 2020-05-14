@@ -512,7 +512,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "exerciseid",
+            "name": "projectid",
             "schema": {
               "type": "integer"
             },
@@ -802,6 +802,11 @@
               }
             }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         }
       }
     },
@@ -898,6 +903,11 @@
               }
             }
           }
+        },
+        "responses": {
+          "201": {
+            "description": "OK"
+          }
         }
       }
     },
@@ -993,6 +1003,11 @@
                 }
               }
             }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK"
           }
         }
       }
