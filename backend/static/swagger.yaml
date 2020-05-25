@@ -15,6 +15,73 @@ components:
       type: apiKey
       in: header
       name: Authorization
+  schemas:
+    User:
+      properties:
+        email:
+          type: string
+        fullname:
+          type: string
+        is_admin:
+          type: boolean
+    Course:
+      properties:
+        courseid:
+          type: integer
+        name:
+          type: string
+        semester:
+          type: string
+        year:
+          type: integer
+    Project:
+      properties:
+        projectid:
+          type: integer
+        email:
+          type: string
+        sessionid:
+          type: integer
+          nullable: true
+        exerciseid:
+          type: integer
+        lastmodified:
+          type: string
+          format: date-time
+        status:
+          type: object
+        filenames:
+          type: array
+          items:
+            type: string
+    Session:
+      properties:
+        sessionid:
+          type: integer
+        name:
+          type: string
+        exerciseid:
+          type: integer
+        active:
+          type: boolean
+    Exercise:
+      properties:
+        exerciseid:
+          type: integer
+        name:
+          type: string
+        courseid:
+          type: integer
+        published:
+          type: boolean
+        numusers:
+          type: integer
+    File:
+      properties:
+        name:
+          type: string
+        contents:
+          type: string
 paths:
   "/courses/":
     get:
@@ -24,6 +91,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
     post:
       tags:
       - Courses
@@ -45,6 +121,10 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
   "/courses/{name}/{semester}/{year}/":
     get:
       tags:
@@ -69,6 +149,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
   "/courses/{courseid}/":
     get:
       tags:
@@ -83,6 +167,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
     patch:
       tags:
       - Courses
@@ -110,6 +198,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
     delete:
       tags:
       - Courses
@@ -121,7 +213,7 @@ paths:
         required: true
       summary: Deletes a course on lobster
       responses:
-        '200':
+        '204':
           description: OK
   "/courses/{courseid}/copy/":
     post:
@@ -138,6 +230,10 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
   "/exercises/":
     post:
       tags:
@@ -165,6 +261,11 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Exercise'
+          
   "/courses/{courseid}/exercises/":
     get:
       tags:
@@ -175,10 +276,19 @@ paths:
         schema:
           type: integer
         required: true
-      summary: Gets a exercises associated with a course on lobster
+      summary: Gets exercises associated with a course on lobster
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exercises:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Exercise'
   "/exercises/{exerciseid}/":
     get:
       tags:
@@ -193,6 +303,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Exercise'
     delete:
       tags:
       - Exercises
@@ -221,10 +335,14 @@ paths:
         schema:
           type: string
         required: true
-      summary: Gets a exercises associated with a course on lobster
+      summary: Gets a starter file from an exercise
       responses:
         '200':
           description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/File'
   "/projects/{projectid}/files/{filename}/":
     get:
       tags:
@@ -244,6 +362,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/File'
     patch:
       tags:
       - Projects
@@ -272,6 +394,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/File'
   "/exercises/{exerciseid}/projects/":
     get:
       tags:
@@ -286,6 +412,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
     post:
       tags:
       - Projects
@@ -298,6 +433,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Project'
       summary: Adds a project to an exercise on lobster
   "/projects/{projectid}/":
     get:
@@ -313,6 +452,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Project'
     delete:
       tags:
       - Projects
@@ -340,6 +483,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: string
   "/projects/{projectid}/status/":
     get:
       tags:
@@ -354,6 +506,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
     patch:
       tags:
       - Projects
@@ -376,6 +532,10 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
   "/exercises/{exerciseid}/starter_files/":
     get:
       tags:
@@ -390,6 +550,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: string
     patch:
       tags:
       - Exercises
@@ -413,6 +582,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: string
     post:
       tags:
       - Exercises
@@ -438,6 +616,15 @@ paths:
       responses:
         '204':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: string
   "/courses/<courseid>/admins/":
     get:
       tags:
@@ -452,6 +639,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
     post:
       tags:
       - Permissions
@@ -476,6 +672,15 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
     patch:
       tags:
       - Permissions
@@ -500,6 +705,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
   "/courses/<courseid>/staff/":
     get:
       tags:
@@ -514,6 +728,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
     post:
       tags:
       - Permissions
@@ -538,6 +761,15 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
     patch:
       tags:
       - Permissions
@@ -562,6 +794,15 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
   "/courses/<courseid>/students/":
     get:
       tags:
@@ -576,6 +817,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
     post:
       tags:
       - Permissions
@@ -600,6 +850,15 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
     patch:
       tags:
       - Permissions
@@ -624,6 +883,15 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
   "/users/<userid>/courses_is_admin_for/":
     get:
       tags:
@@ -638,6 +906,16 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
+                      
   "/users/<userid>/courses_is_staff_for/":
     get:
       tags:
@@ -652,6 +930,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
   "/users/<userid>/courses_is_student_for/":
     get:
       tags:
@@ -666,6 +953,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
   "/users/<userid>/":
     get:
       tags:
@@ -680,6 +976,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   "/users/whoami/":
     get:
       tags:
@@ -688,6 +988,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   "/exercises/{exerciseid}/sessions/":
     get:
       tags:
@@ -702,6 +1006,15 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Session'
     post:
       tags:
       - Sessions
@@ -726,6 +1039,56 @@ paths:
       responses:
         '201':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+  "/sessions/{sessionid}/projects/":
+    get:
+      tags:
+      - Sessions
+      parameters:
+      - in: path
+        name: sessionid
+        schema:
+          type: integer
+        required: true
+      summary: Returns a sessions object for sessionid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+  "/sessions/{sessionid}/status/":
+    get:
+      tags:
+      - Sessions
+      parameters:
+      - in: path
+        name: sessionid
+        schema:
+          type: integer
+        required: true
+      summary: Returns an array of status objects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      type: object
   "/sessions/{sessionid}/":
     get:
       tags:
@@ -736,11 +1099,14 @@ paths:
         schema:
           type: integer
         required: true
-      summary: Gets status on projects in the current session. Returns an array of
-        status objects.
+      summary: Returns a sessions object for sessionid
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
     delete:
       tags:
       - Sessions
@@ -754,6 +1120,7 @@ paths:
       responses:
         '204':
           description: OK
+          
   "/sessions/{sessionid}/stop/":
     patch:
       tags:
@@ -768,6 +1135,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
   "/sessions/{sessionid}/start/":
     patch:
       tags:
@@ -782,6 +1153,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
   "/projects/{projectid}/session/":
     patch:
       tags:
@@ -805,3 +1180,7 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'

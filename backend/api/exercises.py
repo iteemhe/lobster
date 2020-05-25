@@ -94,7 +94,7 @@ def get_starter_files(exerciseid,email):
     files = cur.fetchall()
     files = [file[0] for file in files]
     cur.close()
-    return flask.jsonify(files)
+    return flask.jsonify({"filenames":files})
 
 @backend.app.route('/exercises/<exerciseid>/starter_files/', methods = ['POST'])
 @verify_login

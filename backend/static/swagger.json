@@ -24,6 +24,112 @@
         "in": "header",
         "name": "Authorization"
       }
+    },
+    "schemas": {
+      "User": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "fullname": {
+            "type": "string"
+          },
+          "is_admin": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Course": {
+        "properties": {
+          "courseid": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "semester": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer"
+          }
+        }
+      },
+      "Project": {
+        "properties": {
+          "projectid": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          },
+          "sessionid": {
+            "type": "integer",
+            "nullable": true
+          },
+          "exerciseid": {
+            "type": "integer"
+          },
+          "lastmodified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "object"
+          },
+          "filenames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Session": {
+        "properties": {
+          "sessionid": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "exerciseid": {
+            "type": "integer"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Exercise": {
+        "properties": {
+          "exerciseid": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "courseid": {
+            "type": "integer"
+          },
+          "published": {
+            "type": "boolean"
+          },
+          "numusers": {
+            "type": "integer"
+          }
+        }
+      },
+      "File": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "contents": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "paths": {
@@ -35,7 +141,22 @@
         "summary": "Gets a list of courses on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "courses": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Course"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -68,7 +189,14 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
           }
         }
       }
@@ -107,7 +235,14 @@
         "summary": "Gets details on a course on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
           }
         }
       }
@@ -130,7 +265,14 @@
         "summary": "Gets details on a course on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
           }
         }
       },
@@ -173,7 +315,14 @@
         "summary": "Edits a course on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
           }
         }
       },
@@ -193,7 +342,7 @@
         ],
         "summary": "Deletes a course on lobster",
         "responses": {
-          "200": {
+          "204": {
             "description": "OK"
           }
         }
@@ -217,7 +366,14 @@
         "summary": "Copies an existing course on lobster. Copies exercises and course admins but does not copy other users",
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
           }
         }
       }
@@ -260,7 +416,14 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exercise"
+                }
+              }
+            }
           }
         }
       }
@@ -280,10 +443,25 @@
             "required": true
           }
         ],
-        "summary": "Gets a exercises associated with a course on lobster",
+        "summary": "Gets exercises associated with a course on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "exercises": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Exercise"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -306,7 +484,14 @@
         "summary": "Gets details on an exercise on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exercise"
+                }
+              }
+            }
           }
         }
       },
@@ -355,10 +540,17 @@
             "required": true
           }
         ],
-        "summary": "Gets a exercises associated with a course on lobster",
+        "summary": "Gets a starter file from an exercise",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
           }
         }
       }
@@ -389,7 +581,14 @@
         "summary": "Gets a file from a project on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
           }
         }
       },
@@ -434,7 +633,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/File"
+                }
+              }
+            }
           }
         }
       }
@@ -457,7 +663,22 @@
         "summary": "Gets projects associated with an exercise on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -477,7 +698,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
           }
         },
         "summary": "Adds a project to an exercise on lobster"
@@ -501,7 +729,14 @@
         "summary": "Gets details on a project on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
           }
         }
       },
@@ -545,7 +780,22 @@
         "summary": "Gets starter_files for an exercise on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -568,7 +818,14 @@
         "summary": "Gets the status on a current project",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       },
@@ -604,7 +861,14 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -627,7 +891,22 @@
         "summary": "Gets starter_files for an exercise on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -664,7 +943,22 @@
         "summary": "Removes a starter_file for an exercise on lobster",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -704,7 +998,22 @@
         },
         "responses": {
           "204": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -727,7 +1036,22 @@
         "summary": "Gets list of admins for a course",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -766,7 +1090,22 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -805,7 +1144,22 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -828,7 +1182,22 @@
         "summary": "Gets list of staff for a course",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -867,7 +1236,22 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -906,7 +1290,22 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -929,7 +1328,22 @@
         "summary": "Gets list of students for a course",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -968,7 +1382,22 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1007,7 +1436,22 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1030,7 +1474,22 @@
         "summary": "Gets list of courses the user is an admin for",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "courses": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Course"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1053,7 +1512,22 @@
         "summary": "Gets list of courses the user is an admin for",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "courses": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Course"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1076,7 +1550,22 @@
         "summary": "Gets list of courses the user is an admin for",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "courses": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Course"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1099,7 +1588,14 @@
         "summary": "Gets information on a specific user",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           }
         }
       }
@@ -1112,7 +1608,14 @@
         "summary": "Gets information on the logged in user",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           }
         }
       }
@@ -1135,7 +1638,22 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessions": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Session"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1174,7 +1692,90 @@
         },
         "responses": {
           "201": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{sessionid}/projects/": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sessionid",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Returns a sessions object for sessionid",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{sessionid}/status/": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sessionid",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "summary": "Returns an array of status objects",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projects": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1194,10 +1795,17 @@
             "required": true
           }
         ],
-        "summary": "Gets status on projects in the current session. Returns an array of status objects.",
+        "summary": "Returns a sessions object for sessionid",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
           }
         }
       },
@@ -1241,7 +1849,14 @@
         "summary": "Stops a running session",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
           }
         }
       }
@@ -1264,7 +1879,14 @@
         "summary": "Starts a stopped session",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
           }
         }
       }
@@ -1302,7 +1924,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
           }
         }
       }
