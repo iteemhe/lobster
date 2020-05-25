@@ -1766,7 +1766,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "projects": {
+                    "status": {
                       "type": "array",
                       "items": {
                         "type": "object"
